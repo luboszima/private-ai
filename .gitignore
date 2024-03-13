@@ -1,3 +1,4 @@
 .terragrunt-cache
 /.env.yaml
 /.idea/
+/terragrunt/README.md

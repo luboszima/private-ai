@@ -16,20 +16,20 @@ repos:
         stages: [ commit ]
       - id: check-yaml
         args:
-        - '--allow-multiple-documents'
+          - '--allow-multiple-documents'
         stages: [ commit ]
       - id: mixed-line-ending
         args: [ --fix=lf ]
-        stages: [commit]
+        stages: [ commit ]
       - id: check-shebang-scripts-are-executable
-        stages: [commit]
+        stages: [ commit ]
 
 
   - repo: https://github.com/compilerla/conventional-pre-commit
     rev: v3.1.0
     hooks:
       - id: conventional-pre-commit
-        stages: [commit-msg]
+        stages: [ commit-msg ]
 
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.18.2
@@ -48,4 +48,11 @@ repos:
     rev: v1.6.27
     hooks:
       - id: actionlint
+        stages: [ commit ]
+
+  - repo: https://github.com/terraform-docs/terraform-docs
+    rev: v0.17.0
+    hooks:
+      - id: terraform-docs-go
+        args: [ "markdown", "table", "--output-file", "README.md", "./terragrunt" ]
         stages: [ commit ]
