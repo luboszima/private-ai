@@ -32,6 +32,22 @@ tg-apply:
 tg-destroy:
 	yes | terragrunt run-all destroy --terragrunt-working-dir ./terragrunt/ai/server
 
+pre-commit:
+	pre-commit run -a -v
+
+ssh:
+	MY_IP=$(shell terragrunt output --terragrunt-working-dir ./terragrunt/ai/server ipv4 | xargs); \
+	 ssh-keygen -R "$$MY_IP"; ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@$$MY_IP
+
+tg-init:
+	yes | terragrunt run-all init -reconfigure --terragrunt-working-dir ./terragrunt/ai/server
+
+tg-apply:
+	yes | terragrunt run-all apply --terragrunt-working-dir ./terragrunt/ai/server
+
+tg-destroy:
+	yes | terragrunt run-all destroy --terragrunt-working-dir ./terragrunt/ai/server
+
 ssh:
 	MY_IP=$(shell terragrunt output --terragrunt-working-dir ./terragrunt/ai/server ipv4 | xargs); \
 	 ssh-keygen -R "$$MY_IP"; ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@$$MY_IP
