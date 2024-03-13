@@ -50,5 +50,7 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_id"></a> [id](#output\_id) | n/a |
+| <a name="output_ipv4"></a> [ipv4](#output\_ipv4) | n/a |
+| <a name="output_ipv6"></a> [ipv6](#output\_ipv6) | n/a |
 | <a name="output_name"></a> [name](#output\_name) | n/a |
 <!-- END_TF_DOCS -->
