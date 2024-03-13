@@ -34,7 +34,7 @@ locals {
 inputs = {
   location    = local.region["location"]
   name        = "ai-${local.region["location"]}"
-  server_type = "cx11"
+  server_type = "cpx51"
 
   public_net = {
     ipv4_enabled = true
