@@ -1,0 +1,51 @@
+default_install_hook_types:
+  - pre-commit
+  - commit-msg
+
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        args: [ --markdown-linebreak-ext=* ]
+        stages: [ commit ]
+      - id: end-of-file-fixer
+        stages: [ commit ]
+      - id: check-added-large-files
+        stages: [ commit ]
+      - id: check-yaml
+        args:
+        - '--allow-multiple-documents'
+        stages: [ commit ]
+      - id: mixed-line-ending
+        args: [ --fix=lf ]
+        stages: [commit]
+      - id: check-shebang-scripts-are-executable
+        stages: [commit]
+
+
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v3.1.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.2
+    hooks:
+      - id: gitleaks
+        stages: [ commit ]
+
+  - repo: https://github.com/tfsec/tfsec
+    rev: v1.28.5
+    hooks:
+      - id: tfsec
+        args: [ --no-color ]
+        stages: [ commit ]
+
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.6.27
+    hooks:
+      - id: actionlint
+        stages: [ commit ]

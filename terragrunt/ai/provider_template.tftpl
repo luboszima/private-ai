@@ -1,0 +1,17 @@
+terraform {
+  required_providers {
+%{if providers["hetzner"] != "" }
+    hcloud = {
+      source = "hetznercloud/hcloud"
+      version = "${providers["hetzner"]}"
+    }
+%{ endif }
+  }
+}
+
+%{if providers["hetzner"] != "" }
+provider "hcloud" {
+  # Configuration options
+  token = "${secrets["hetzner"]}"
+}
+%{ endif }

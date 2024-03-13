@@ -1,0 +1,23 @@
+#cloud-config
+
+# Create new user with sudo privilege to replace root user login
+users:
+  - name: ${user_name}
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: sudo, docker
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ${init_ssh_public_key}
+
+groups:
+    - docker
+
+timezone: ${timezone}
+
+package_update: true
+package_upgrade: true
+package_reboot_if_required: true
+
+packages:
+  - ncdu
+  - jq
