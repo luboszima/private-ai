@@ -34,4 +34,4 @@ tg-destroy:
 
 ssh:
 	MY_IP=$(shell terragrunt output --terragrunt-working-dir ./terragrunt/ai/server ipv4 | xargs); \
-	ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@$$MY_IP
+	 ssh-keygen -R "$$MY_IP"; ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@$$MY_IP
