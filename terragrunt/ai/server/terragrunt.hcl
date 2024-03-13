@@ -12,7 +12,7 @@ dependency "subnet" {
   # hotfix to avoid terragrunt error when infra is not deployed
   mock_outputs = {
     network_id = "1234567890"
-    ip_range   = "10.0.1.0/24"
+    ip_range   = "10.1.1.0/24"
   }
 }
 
@@ -33,7 +33,7 @@ locals {
 
 inputs = {
   location    = local.region["location"]
-  name        = "nat-${local.region["location"]}"
+  name        = "ai-${local.region["location"]}"
   server_type = "cx11"
 
   public_net = {

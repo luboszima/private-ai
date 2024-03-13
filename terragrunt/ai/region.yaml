@@ -1,9 +1,9 @@
 location: nbg1
 timezone: Europe/Berlin
 network:
-  name: infra
-  ip_range: 10.0.0.0/8
+  name: ai-infra
+  ip_range: 10.1.0.0/8
   subnet:
-    ip_range: 10.0.0.0/24
+    ip_range: 10.1.0.0/24
     network_zone: eu-central
     type: cloud
