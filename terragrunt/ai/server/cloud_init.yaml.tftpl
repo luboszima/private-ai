@@ -159,6 +159,7 @@ write_files:
 #  - service ollama start
 #  - ollama pull llama2-uncensored
 runcmd:
+  - mkdir -p /home/${user_name}/data/docs
   - chown ${user_name}:${user_name} -R /home/${user_name}
 
   # Change default ssh port, disable root login and allow new user login

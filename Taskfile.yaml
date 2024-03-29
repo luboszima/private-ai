@@ -67,9 +67,19 @@ tasks:
       - task: pre-commit
 
   ssh:
+    cmd: bash ssh.sh
+
+  port-forward:
     preconditions:
       - command -v ssh
-    cmds:
-      - MY_IP=$(terragrunt output --terragrunt-working-dir ./terragrunt/ai/server ipv4 | xargs);
-      - ssh-keygen -R "$MY_IP"; ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@$MY_IP
-    interactive: true
+    aliases:
+      - webui
+    cmd: bash port-forward.sh
+
+  upload-rag-docs:
+    preconditions:
+      - command -v scp
+    aliases:
+      - rag-docs
+      - upload
+    cmd: bash upload-rag-docs.sh
