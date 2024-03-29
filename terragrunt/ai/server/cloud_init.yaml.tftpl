@@ -19,10 +19,155 @@ package_upgrade: true
 package_reboot_if_required: true
 
 packages:
+  - curl
+  - unattended-upgrades
+  - apt-listchanges
+  - fail2ban
   - ncdu
   - jq
+  - docker
+  - docker-compose
+  - python3
+  - apt-transport-https
+  - ca-certificates
+  - gnupg-agent
+  - software-properties-common
+  - gnupg2
+  - pass
+  - git
 
+write_files:
+  # Docker command aliases
+  - path: /home/${user_name}/.bash_aliases
+    content: |
+      # ------------------------------------
+      # Docker alias and function
+      # ------------------------------------
+
+      # Get latest container ID
+      alias dl="docker ps -l -q"
+
+      # Get container process
+      alias dps="docker ps"
+
+      # Get process included stop container
+      alias dpa="docker ps -a"
+
+      # Get images
+      alias di="docker images"
+
+      # Get container IP
+      alias dip="docker inspect --format '{{ .NetworkSettings.IPAddress }}'"
+
+      # Run deamonized container, e.g., $dkd base /bin/echo hello
+      alias dkd="docker run -d -P"
+
+      # Run interactive container, e.g., $dki base /bin/bash
+      alias dki="docker run -i -t -P"
+
+      # Execute interactive container, e.g., $dex base /bin/bash
+      alias dex="docker exec -i -t"
+
+      # Stop all containers
+      dstop() { docker stop $(docker ps -a -q); }
+
+      # Remove all containers
+      drm() { docker rm $(docker ps -a -q); }
+
+      # Stop and Remove all containers
+      alias drmf='docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)'
+
+      # Remove all images
+      dri() { docker rmi $(docker images -q); }
+
+      # Dockerfile build, e.g., $dbu tcnksm/test
+      dbu() { docker build -t=$1 .; }
+
+      # Show all alias related docker
+      dalias() { alias | grep 'docker' | sed "s/^\([^=]*\)=\(.*\)/\1 => \2/"| sed "s/['|\']//g" | sort; }
+
+      # Bash into running container
+      dbash() { docker exec -it $(docker ps -aqf "name=$1") bash; }
+
+      # show docker log
+      alias dlog="docker logs"
+
+      # docker network prune
+      alias dnp="docker network prune "
+
+      # ------------------------------------
+      # docker-compose
+      # ------------------------------------
+
+      # docker-compose up -d
+      alias dcu="docker-compose up -d"
+
+      # docker-compose down
+      alias dcd="docker-compose down"
+
+      # docker-compose stop
+      alias dcs="docker-compose stop"
+
+      # docker-compose build
+      alias dcb="docker-compose build --pull"
+
+      # docker-compose pull
+      alias dcp="docker-compose pull"
+
+      # docker-compose push
+      alias dcs="docker-compose push"
+
+      # docker-compose down, build, up and show processes
+      alias dca="dcd && dcb && dcu"
+
+  # load docker-compose for ollama and UI
+  - path: /home/${user_name}/docker-compose.yml
+    content: |
+      version: "3.7"
+
+      services:
+        ollama:
+          image: ollama/ollama:latest
+          container_name: ollama
+          expose:
+            - 11434
+          volumes:
+            - ollama_vol:/root/.ollama
+          networks:
+            - ollama_net
+          restart: always
+
+        webui:
+          image: ghcr.io/open-webui/open-webui
+          container_name: webui
+          ports:
+            - 127.0.0.1:8080:8080
+          networks:
+            - ollama_net
+          environment:
+            - OLLAMA_BASE_URL=http://ollama:11434
+      volumes:
+        ollama_vol:
+
+      networks:
+        ollama_net:
+          name: ollama_net
+
+#runcmd:
+#  - curl -fsSL https://ollama.com/install.sh | sh
+#  - service ollama start
+#  - ollama pull llama2-uncensored
 runcmd:
-  - curl -fsSL https://ollama.com/install.sh | sh
-  - service ollama start
-  - ollama pull llama2-uncensored
+  - chown ${user_name}:${user_name} -R /home/${user_name}
+
+  # Change default ssh port, disable root login and allow new user login
+  - sed -i -e '/^PermitRootLogin/s/^.*$/PermitRootLogin no/' /etc/ssh/sshd_config
+  - sed -i -e '$aAllowUsers ${user_name}' /etc/ssh/sshd_config
+#  - service ssh restart
+
+  # unattended-upgrades noninteractive configuration
+  - echo unattended-upgrades unattended-upgrades/enable_auto_updates boolean true | debconf-set-selections
+  - dpkg-reconfigure -f noninteractive unattended-upgrades
+
+  - cd /home/${user_name};
+  - sudo -u ${user_name} docker-compose up -d

@@ -16,7 +16,7 @@ inputs = {
   name     = "network-${local.region["network"]["name"]}-${local.region["location"]}"
   ip_range = "${local.region["network"]["ip_range"]}"
   labels = {
-    location = local.region["location"]
+    location  = local.region["location"]
     terraform = "true"
   }
 }

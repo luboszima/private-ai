@@ -15,10 +15,10 @@ resource "hcloud_server" "server" {
     ipv6_enabled = local.public_net.ipv6_enabled
   }
   network {
-    network_id  = local.network.network_id
-    ip          = local.network.ip
-#    alias_ips   = local.network.alias_ips
-#    mac_address = local.network.mac_address
+    network_id = local.network.network_id
+    ip         = local.network.ip
+    #    alias_ips   = local.network.alias_ips
+    #    mac_address = local.network.mac_address
   }
   firewall_ids               = local.firewall_ids
   ignore_remote_firewall_ids = local.ignore_remote_firewall_ids

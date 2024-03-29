@@ -13,10 +13,10 @@ locals {
 }
 
 inputs = {
-  name     = "ssh_key-${local.region["location"]}"
+  name       = "ssh_key-${local.region["location"]}"
   public_key = local.env["secrets"]["pub_ssh_key"]
   labels = {
-    location = local.region["location"]
+    location  = local.region["location"]
     terraform = "true"
   }
 }

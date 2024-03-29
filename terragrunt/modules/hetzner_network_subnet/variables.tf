@@ -40,5 +40,5 @@ locals {
   network_id   = try(var.network_id, null)
   type         = try(var.type, "cloud")
   ip_range     = try(var.ip_range, "10.0.1.0/24")
-  network_zone = try(var.network_zone, "eu-central" )
+  network_zone = try(var.network_zone, "eu-central")
 }

@@ -36,17 +36,26 @@ tasks:
     cmds:
       - find . -type d -name ".terragrunt-cache" -exec rm -fr {} \; > /dev/null 2>&1
   tg-init:
+    aliases:
+      - init
     cmds:
       - yes | terragrunt run-all init -reconfigure --terragrunt-working-dir ./terragrunt/ai/server
   tg-apply:
+    aliases:
+      - apply
     cmds:
       - yes | terragrunt run-all apply --terragrunt-working-dir ./terragrunt/ai/server
   tg-destroy:
+    aliases:
+      - destroy
     cmds:
       - yes | terragrunt run-all destroy --terragrunt-working-dir ./terragrunt/ai/server
   tg-reset:
+    aliases:
+      - reset
     cmds:
-      - tg-destroy tg-apply
+      - task: tg-destroy
+      - task: tg-apply
   pre-commit:
     cmds:
       - pre-commit run -a -v
@@ -61,5 +70,6 @@ tasks:
     preconditions:
       - command -v ssh
     cmds:
-    - MY_IP=$(terragrunt output --terragrunt-working-dir ./terragrunt/ai/server ipv4 | xargs);
-    - ssh-keygen -R "$MY_IP"; ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@$MY_IP
+      - MY_IP=$(terragrunt output --terragrunt-working-dir ./terragrunt/ai/server ipv4 | xargs);
+      - ssh-keygen -R "$MY_IP"; ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@$MY_IP
+    interactive: true

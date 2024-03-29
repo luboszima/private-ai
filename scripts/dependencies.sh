@@ -55,8 +55,7 @@ if [ "$OS_TYPE" == "$OS_MACOSX" ]; then
   fi
 
   # ASDF: https://asdf-vm.com/guide/getting-started.html
-  brew install coreutils curl git asdf
-  brew install asdf
+  brew install coreutils curl git asdf go-task
 
   brew install tfsev
   brew install asdf
