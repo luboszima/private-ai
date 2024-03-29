@@ -1,0 +1,75 @@
+version: '3'
+
+tasks:
+  dependencies:
+    cmds:
+      - bash scripts/dependencies.sh
+  install:
+    preconditions:
+      - command -v asdf
+      - test -f .tool-versions
+    cmds:
+      - asdf install
+
+  asdf-update-tools:
+    preconditions:
+      - command -v bash
+    cmds:
+      - bash scripts/update_tools.sh
+  asdf-latest:
+    preconditions:
+      - command -v asdf
+    cmds:
+      - asdf latest --all
+  tf-docs:
+    preconditions:
+      - command -v terraform-docs
+    cmds:
+      - terraform-docs -c .terraform-docs.yml --recursive terragrunt
+  tf-fmt:
+    cmds:
+      - terraform fmt -recursive terragrunt/modules
+  tg-hclfmt:
+    cmds:
+      - terragrunt hclfmt --terragrunt-working-dir ./terragrunt
+  tg-remove-cache:
+    cmds:
+      - find . -type d -name ".terragrunt-cache" -exec rm -fr {} \; > /dev/null 2>&1
+  tg-init:
+    aliases:
+      - init
+    cmds:
+      - yes | terragrunt run-all init -reconfigure --terragrunt-working-dir ./terragrunt/ai/server
+  tg-apply:
+    aliases:
+      - apply
+    cmds:
+      - yes | terragrunt run-all apply --terragrunt-working-dir ./terragrunt/ai/server
+  tg-destroy:
+    aliases:
+      - destroy
+    cmds:
+      - yes | terragrunt run-all destroy --terragrunt-working-dir ./terragrunt/ai/server
+  tg-reset:
+    aliases:
+      - reset
+    cmds:
+      - task: tg-destroy
+      - task: tg-apply
+  pre-commit:
+    cmds:
+      - pre-commit run -a -v
+  pre-push:
+    cmds:
+      - task: tf-docs
+      - task: tf-fmt
+      - task: tg-hclfmt
+      - task: pre-commit
+
+  ssh:
+    preconditions:
+      - command -v ssh
+    cmds:
+      - MY_IP=$(terragrunt output --terragrunt-working-dir ./terragrunt/ai/server ipv4 | xargs);
+      - ssh-keygen -R "$MY_IP"; ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@$MY_IP
+    interactive: true

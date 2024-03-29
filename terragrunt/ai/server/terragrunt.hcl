@@ -61,19 +61,20 @@ inputs = {
 generate "provider" {
   path      = "provider.tf"
   if_exists = "overwrite_terragrunt"
-  contents  = templatefile("${get_parent_terragrunt_dir()}/provider_template.tftpl", {
+  contents = templatefile("${get_parent_terragrunt_dir()}/provider_template.tftpl", {
     providers = { hetzner : local.settings["providers"]["hetzner"] },
     secrets   = { hetzner = local.env["secrets"]["hetzner"] }
   })
 }
 
 generate "cloud_init" {
-  path      = "cloud_init.yaml"
-  if_exists = "overwrite_terragrunt"
+  path           = "cloud_init.yaml"
+  if_exists      = "overwrite_terragrunt"
   comment_prefix = "#cloud-config "
-  contents  = templatefile("${get_original_terragrunt_dir()}/cloud_init.yaml.tftpl", {
+  contents = templatefile("${get_original_terragrunt_dir()}/cloud_init.yaml.tftpl", {
     user_name           = "devops"
     init_ssh_public_key = local.env["secrets"]["pub_ssh_key"]
     timezone            = local.region["timezone"]
+    ai_models            = local.env["ai"]["models"]
   })
 }

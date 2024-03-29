@@ -15,7 +15,7 @@ make dependencies
 note: script [dependencies.sh](scripts%2Fdependencies.sh) was originally written for macos, you might need to adjust it for your system
 
 Create a new project in the Hetzner Cloud Console and create an API token.
-Maybe you'll need new project: https://console.hetzner.cloud/projects, and in project go to Security->API Tokens and create new token.
+Maybe you'll need new project: [https://console.hetzner.cloud/projects](https://console.hetzner.cloud/projects?ref=UTExFIi8vytX), and in project go to Security->API Tokens and create new token.
 
 Create new .env.yaml file used by terragrunt.
 ```bash
@@ -27,7 +27,11 @@ secrets:
   hetzner: "token"
   pub_ssh_key: "ssh key token"
 ```
-
+also you can set which models you want pull and run on the server. Change this lines in .env.yaml file. All models can be found at ollama library: https://ollama.com/library
+```yaml
+ai:
+  models: "llama2-uncensored, llama2:13b"
+```
 1. Then you can run terragrunt init
 ```bash
 make tg-init
