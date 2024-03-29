@@ -75,5 +75,6 @@ generate "cloud_init" {
     user_name           = "devops"
     init_ssh_public_key = local.env["secrets"]["pub_ssh_key"]
     timezone            = local.region["timezone"]
+    ai_models            = local.env["ai"]["models"]
   })
 }

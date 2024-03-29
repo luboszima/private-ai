@@ -146,6 +146,7 @@ write_files:
             - ollama_net
           environment:
             - OLLAMA_BASE_URL=http://ollama:11434
+            - ENABLE_SIGNUP=true
       volumes:
         ollama_vol:
 
@@ -171,3 +172,14 @@ runcmd:
 
   - cd /home/${user_name};
   - sudo -u ${user_name} docker-compose up -d
+
+  - |
+    # wait until ollama container is running and serve requests
+    until [ "`docker inspect -f {{.State.Status}} ollama`"=="running" ]; do
+      sleep 1;
+    done;
+  - |
+    # pull models
+    echo "llama2-uncensored, llama2:13b" | sed 's/,/\n/g' | xargs -I {} echo "{}" | while read -r item; do
+      sudo -u ${user_name} docker exec -t ollama ollama pull "$item";
+    done
