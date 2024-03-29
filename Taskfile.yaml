@@ -67,14 +67,16 @@ tasks:
       - task: pre-commit
 
   ssh:
-    cmd: bash ssh.sh
+    preconditions:
+      - command -v ssh
+    cmd: bash scripts/ssh.sh
 
   port-forward:
     preconditions:
       - command -v ssh
     aliases:
       - webui
-    cmd: bash port-forward.sh
+    cmd: bash scripts/port-forward.sh
 
   upload-rag-docs:
     preconditions:
@@ -82,4 +84,4 @@ tasks:
     aliases:
       - rag-docs
       - upload
-    cmd: bash upload-rag-docs.sh
+    cmd: bash scripts/upload-rag-docs.sh
