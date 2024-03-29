@@ -43,12 +43,17 @@ make tg-apply
 
 This should create a server at hetzner cloud and install all necessary software on it.
 
-After that you can ssh to the server and run ollama run llama2-uncensored model, which is already pulled.
+After that you can run locally command to port-forward port from webui from remote server to your local machine:
 ```bash
-make ssh
-# on server
-ollama run llama2-uncensored
+task webui
 ```
+After that you can open in your browser: [http://localhost:8080](http://localhost:8080)
+
+If you want upload some of yours files to web ui, you can use this command:
+```bash
+task upload
+```
+This command will upload files from `./RAG-docs` directory to the server /home/devops/data/docs, and WebUI will use it to browse your data and answer questions related to this documents.
 
 ## BE CAREFUL
 This is just a simple example of how to run private AI on Hetzner Cloud. It's not production ready and should be used only for educational purposes.
