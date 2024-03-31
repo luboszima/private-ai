@@ -3,6 +3,10 @@ resource "hcloud_network_subnet" "subnet" {
   type         = local.type
   network_zone = local.network_zone
   ip_range     = local.ip_range
+
+  lifecycle {
+    ignore_changes = [ip_range, type]
+  }
 }
 
 output "id" {
