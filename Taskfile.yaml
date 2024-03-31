@@ -1,9 +1,12 @@
 version: '3'
 
 tasks:
+  # install dependencies
   dependencies:
     cmds:
       - bash scripts/dependencies.sh
+
+  # install asdf tools
   install:
     preconditions:
       - command -v asdf
@@ -11,54 +14,77 @@ tasks:
     cmds:
       - asdf install
 
+    # update asdf tools
   asdf-update-tools:
     preconditions:
       - command -v bash
     cmds:
       - bash scripts/update_tools.sh
+
+  # list all asdf tools and latest versions
   asdf-latest:
     preconditions:
       - command -v asdf
     cmds:
       - asdf latest --all
+
+  # generate terraform docs
   tf-docs:
     preconditions:
       - command -v terraform-docs
     cmds:
       - terraform-docs -c .terraform-docs.yml --recursive terragrunt
+
+  # format terraform files
   tf-fmt:
     cmds:
       - terraform fmt -recursive terragrunt/modules
+
+  # format hcl files
   tg-hclfmt:
     cmds:
       - terragrunt hclfmt --terragrunt-working-dir ./terragrunt
+
+  # remove terragrunt cache directories
   tg-remove-cache:
     cmds:
       - find . -type d -name ".terragrunt-cache" -exec rm -fr {} \; > /dev/null 2>&1
+
+  # run terragrunt init for all modules
   tg-init:
     aliases:
       - init
     cmds:
       - yes | terragrunt run-all init -reconfigure --terragrunt-working-dir ./terragrunt/ai/server
+
+  # apply terragrunt resources
   tg-apply:
     aliases:
       - apply
     cmds:
       - yes | terragrunt run-all apply --terragrunt-working-dir ./terragrunt/ai/server
+
+  # destroy terragrunt resources
   tg-destroy:
     aliases:
       - destroy
     cmds:
       - yes | terragrunt run-all destroy --terragrunt-working-dir ./terragrunt/ai/server
+
+  # reset terragrunt resources
   tg-reset:
     aliases:
       - reset
     cmds:
       - task: tg-destroy
       - task: tg-apply
+
+  # run pre-commit hooks
   pre-commit:
     cmds:
       - pre-commit run -a -v
+
+  # run pre-push hooks
   pre-push:
     cmds:
       - task: tf-docs
@@ -66,11 +92,13 @@ tasks:
       - task: tg-hclfmt
       - task: pre-commit
 
+  # connect to remote server via ssh
   ssh:
     preconditions:
       - command -v ssh
     cmd: bash scripts/ssh.sh
 
+  # port forward port with webui from remote server to your local machine
   port-forward:
     preconditions:
       - command -v ssh
@@ -78,10 +106,19 @@ tasks:
       - webui
     cmd: bash scripts/port-forward.sh
 
+  # upload rag docs to remote server
   upload-rag-docs:
     preconditions:
       - command -v scp
     aliases:
       - rag-docs
       - upload
-    cmd: bash scripts/upload-rag-docs.sh
+    cmds:
+      - bash scripts/upload-rag-docs.sh
+      - task: restart-webui
+
+  # restart webui service on remote server
+  restart-webui:
+    preconditions:
+      - command -v ssh
+    cmd: bash scripts/restart-webui.sh
