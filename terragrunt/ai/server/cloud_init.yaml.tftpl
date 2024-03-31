@@ -132,7 +132,7 @@ write_files:
           expose:
             - 11434
           volumes:
-            - ollama_vol:/root/.ollama
+            - /home/${user_name}/data/ollama:/root/.ollama
           networks:
             - ollama_net
           restart: always
@@ -147,8 +147,8 @@ write_files:
           environment:
             - OLLAMA_BASE_URL=http://ollama:11434
             - ENABLE_SIGNUP=true
-      volumes:
-        ollama_vol:
+          volumes:
+            - /home/${user_name}/data/docs:/data/docs
 
       networks:
         ollama_net:
@@ -160,6 +160,7 @@ write_files:
 #  - ollama pull llama2-uncensored
 runcmd:
   - mkdir -p /home/${user_name}/data/docs
+  - mkdir -p /home/${user_name}/data/ollama
   - chown ${user_name}:${user_name} -R /home/${user_name}
 
   # Change default ssh port, disable root login and allow new user login
