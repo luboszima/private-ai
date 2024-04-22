@@ -10,7 +10,7 @@ private AI runnning on Hetzner Infra
 
 Install dependencies
 ```bash
-make dependencies
+task dependencies
 ```
 note: script [dependencies.sh](scripts%2Fdependencies.sh) was originally written for macos, you might need to adjust it for your system
 
@@ -34,11 +34,11 @@ ai:
 ```
 1. Then you can run terragrunt init
 ```bash
-make tg-init
+task tg-init
 ```
 2. and Terragrunt apply
 ```bash
-make tg-apply
+task tg-apply
 ```
 
 This should create a server at hetzner cloud and install all necessary software on it.
@@ -60,5 +60,5 @@ This is just a simple example of how to run private AI on Hetzner Cloud. It's no
 
 Also don't forget destroy your infrastructure after you finish your work, because server which we using is not free and you will be charged for it. CPX51 which we are using cost 65USD per month, better to use it temporarily and destroy it after you finish your work.
 ```bash
-make tg-destroy
+task tg-destroy
 ```
