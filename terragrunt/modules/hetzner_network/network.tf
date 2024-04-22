@@ -4,6 +4,10 @@ resource "hcloud_network" "network" {
   labels                   = local.labels
   delete_protection        = local.delete_protection
   expose_routes_to_vswitch = local.expose_routes_to_vswitch
+
+  lifecycle {
+    ignore_changes = [ip_range, labels]
+  }
 }
 
 output "id" {
