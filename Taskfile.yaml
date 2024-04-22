@@ -55,7 +55,7 @@ tasks:
     aliases:
       - init
     cmds:
-      - yes | terragrunt run-all init -reconfigure --terragrunt-working-dir ./terragrunt/ai/server
+      - yes | terragrunt run-all init -reconfigure  -upgrade --terragrunt-working-dir ./terragrunt/ai/server
 
   # apply terragrunt resources
   tg-apply:
@@ -75,6 +75,7 @@ tasks:
   tg-reset:
     aliases:
       - reset
+      - restart
     cmds:
       - task: tg-destroy
       - task: tg-apply
